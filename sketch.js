@@ -1,120 +1,86 @@
-let gridSize = 20;
-let cols, rows;
+let cols = 10;
+let rows = 10;
+let spacingX, spacingY;
 
 function setup() {
-  createCanvas(400, 400);
-  cols = int(width / gridSize);
-  rows = int(height / gridSize);
-  
-  // Required so atan2() angles work with rotate() in degrees
-  angleMode(DEGREES);
+  createCanvas(windowWidth, windowHeight);
+  rectMode(CENTER);
+  ellipseMode(CENTER);
+  calculateSpacing();
 }
 
 function draw() {
-  background(220);
+  background(15, 17, 26);
   
-  // ==========================
-  // 1. BACKGROUND PATTERN
-  // ==========================
+  let mouseFactorX = map(mouseX, 0, width, 0.5, 2.5);
+  let mouseFactorY = map(mouseY, 0, height, -0.5, 0.5);
+
+
+
+
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
-      let x = i * gridSize + gridSize / 3;
-      let y = j * gridSize + gridSize / 6;
+      
+      let x = spacingX / 2 + i * spacingX;
+      let y = spacingY / 2 + j * spacingY;
+      
+      let index = i * rows + j;
+      let angle = frameCount * 0.02 * mouseFactorX + sin(frameCount * 0.03 + index * 0.1);
+      let scaleFactor = map(sin(frameCount * 0.04 + (i + j) * 0.3), -1, 1, 0.4, 0.95);
+      let shearVal = mouseFactorY * cos(frameCount * 0.02 + i * 0.2);
 
-      stroke(0);
-      strokeWeight(1);
-      noFill();
-      rect(x, y, gridSize);
-      line(x - gridSize / 4, y + gridSize / 2, x + gridSize / 2, y - gridSize / 2);
-      triangle(
-        x - gridSize / 2, y - gridSize / 3,
-        x - gridSize / 2, y + gridSize / 2,
-        x + gridSize / 5, y + gridSize / 2
-      );
+
+
+
+      push();
+      
+      translate(x, y);
+      
+
+
+
+
+
+      rotate(angle);
+      
+      shearX(shearVal);
+      
+      scale(scaleFactor);
+
+      if ((i + j) % 2 === 0) {
+        // Pattern Variant A
+        stroke(100, 200, 255, 220);
+        strokeWeight(2);
+        fill(255, 100, 150, 40);
+        rect(0, 0, spacingX * 0.75, spacingY * 0.75);
+
+        noStroke();
+        fill(255, 220, 100, 180);
+        ellipse(0, 0, spacingX * 0.25, spacingY * 0.25);
+      } else {
+        // Pattern Variant B
+        stroke(255, 100, 150, 220);
+        strokeWeight(2);
+        fill(100, 200, 255, 40);
+        ellipse(0, 0, spacingX * 0.75, spacingY * 0.75);
+
+        // Inner detail
+        noStroke();
+        fill(100, 255, 180, 180);
+        rect(0, 0, spacingX * 0.25, spacingY * 0.25);
+      }
+
+      pop();
     }
   }
+}
 
-  // ==========================
-  // 2. CAT HEAD & BODY PARTS
-  // ==========================
-  
-  // --- Left Ear ---
-  fill('#F5E2A6');
-  stroke('#333');
-  strokeWeight(3);
-  triangle(120, 150, 160, 50, 210, 120);
+function calculateSpacing() {
+  spacingX = width / cols;
+  spacingY = height / rows;
+}
 
-  // --- Right Ear ---
-  triangle(280, 150, 240, 50, 190, 120);
-
-  // --- Head ---
-  ellipse(200, 200, 180, 180); 
-
-  // ==========================
-  // 3. MOUSE-TRACKING EYES
-  // ==========================
-  
-  // --- Left Eye ---
-  let leftX = 170;
-  let leftY = 180;
-  let leftAngle = atan2(mouseY - leftY, mouseX - leftX);
-
-  push();
-  translate(leftX, leftY);
-  fill(255);          // White of the eye
-  stroke('#333');
-  strokeWeight(1);
-  ellipse(0, 0, 30, 30); // Scaled down to fit the cat
-  
-  rotate(leftAngle);
-  fill('#333');       // Pupil
-  noStroke();
-  ellipse(7, 0, 12, 12); // Pupil offset
-  pop();
-
-  // --- Right Eye ---
-  let rightX = 230;
-  let rightY = 180;
-  let rightAngle = atan2(mouseY - rightY, mouseX - rightX);
-
-  push();
-  translate(rightX, rightY);
-  fill(255);          // White of the eye
-  stroke('#333');
-  strokeWeight(1);
-  ellipse(0, 0, 30, 30); // Scaled down to fit the cat
-  
-  rotate(rightAngle);
-  fill('#333');       // Pupil
-  noStroke();
-  ellipse(7, 0, 12, 12); // Pupil offset
-  pop();
-
-  // ==========================
-  // 4. NOSE, MOUTH & WHISKERS
-  // ==========================
-  
-  // --- Nose ---
-  fill('#EDB39A');
-  stroke('#333');
-  strokeWeight(1);
-  triangle(200, 215, 190, 205, 210, 205);
-
-  // --- Mouth ---
-  noFill();
-  stroke('#333');
-  strokeWeight(3);
-  arc(190, 220, 20, 20, 0, PI);
-  arc(210, 220, 20, 20, 0, PI);
-
-  // --- Whiskers ---
-  strokeWeight(2);
-  // Left Whiskers
-  line(150, 210, 100, 200);
-  line(150, 220, 95, 220);
-  line(150, 230, 100, 240);
-  // Right Whiskers
-  line(250, 210, 300, 200);
-  line(250, 220, 305, 220);
-  line(250, 230, 300, 240);
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  calculateSpacing();
 }

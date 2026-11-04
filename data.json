@@ -1,0 +1,26 @@
+[
+  {
+    "Genre": "pop/american",
+    "Playlist": "americaaasss",
+    "Where": "school",
+    "How many times": "less than 10",
+    "when": "morning",
+    "old or new": "old or new"
+  },
+  {
+    "Genre": "rock",
+    "Playlist": "KYS SPOTIFY",
+    "Where": "car",
+    "How many times": "more than 10",
+    "when": "afternoon",
+    "old or new": "new"
+  },
+  {
+    "Genre": "kpop",
+    "Playlist": "brother in jesus christ",
+    "Where": "home",
+    "How many times": null,
+    "when": "night",
+    "old or new": "cafe"
+  }
+]
